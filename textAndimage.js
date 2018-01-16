@@ -25,7 +25,6 @@ const svg1 = textToSVG.getSVG('共晒了6次餐', {
     fontSize: 25,
     anchor: 'top',
 });
-
 const svg2 = textToSVG.getSVG('为留守儿童捐赠了10000分', {
     x: 0,
     y: 0,
@@ -52,7 +51,7 @@ const svg5 = textToSVG.getSVG('帝听', {
 });
 // 存储生成的svg文件名和svg转png图片名,用于后续删除
 const filePath = [];
-async.series({
+async.parallel({
     // 将生成的文字svg转换成图片,一并返回其文件名和尺寸
     svg1: callback => {
         fs.writeFileSync(svgPath + '1.svg', svg1);
@@ -100,7 +99,7 @@ async.series({
     }
 }, (err, results) => {
     images(sourceImg)
-    // 图像路径
+    // 头像路径
         .draw(images(mainPath+"headoJk_JwD8aMN1ZvlqNGyRm0xcOjM8.jpg"), 310, 100)
         .draw(results.svg1[0], results.svg1[1], results.svg1[2])
         .draw(results.svg2[0], results.svg2[1], results.svg2[2])
