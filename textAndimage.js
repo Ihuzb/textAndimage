@@ -6,14 +6,16 @@ const images = require('images');
 const TextToSVG = require('text-to-svg');
 const async = require('async');
 const gm = require('gm');
+// 主要文件目录
+const mainPath = './svgfile/';
 // 设置字体黑体
-const textToSVG = TextToSVG.loadSync('./svgfile/simhei.ttf');
+const textToSVG = TextToSVG.loadSync(mainPath + 'simhei.ttf');
 // 设置背景图片
-const sourceImg = images('./svgfile/background1.png');
+const sourceImg = images(mainPath + 'background1.png');
 // 设置时间戳来区分名称
-const timestamp = Date.parse(new Date())/1000;
+const timestamp = Date.parse(new Date()) / 1000;
 // 保存的svg文件名称
-const svgPath = './svgfile/' + timestamp + '_svg';
+const svgPath = mainPath + timestamp + '_svg';
 // 生成的合成图片名称
 const svgName = timestamp + '_svgcard.png';
 // 设置文字
@@ -52,9 +54,9 @@ const svg5 = textToSVG.getSVG('帝听', {
 const filePath = [];
 async.series({
     // 将生成的文字svg转换成图片,一并返回其文件名和尺寸
-    svg1: function (callback) {
+    svg1: callback => {
         fs.writeFileSync(svgPath + '1.svg', svg1);
-        gm(svgPath + '1.svg').write(svgPath + '1.png', function (err) {
+        gm(svgPath + '1.svg').write(svgPath + '1.png', err => {
             if (!err) console.log('1.svg生成成功！');
             let target2Img = images(svgPath + '1.png');
             let offsetX2 = 100;
@@ -63,9 +65,9 @@ async.series({
             callback(null, target2Img, offsetX2, offsetY2);
         })
     },
-    svg2: function (callback) {
+    svg2: callback => {
         fs.writeFileSync(svgPath + '2.svg', svg2);
-        gm(svgPath + '2.svg').write(svgPath + '2.png', function (err) {
+        gm(svgPath + '2.svg').write(svgPath + '2.png', err => {
             if (!err) console.log('2.svg生成成功！');
             let target1Img = images(svgPath + '2.png');
             let offsetX1 = 450;
@@ -74,9 +76,9 @@ async.series({
             callback(null, target1Img, offsetX1, offsetY1);
         })
     },
-    svg3: function (callback) {
+    svg3: callback => {
         fs.writeFileSync(svgPath + '3.svg', svg3);
-        gm(svgPath + '3.svg').write(svgPath + '3.png', function (err) {
+        gm(svgPath + '3.svg').write(svgPath + '3.png', err => {
             if (!err) console.log('3.svg生成成功！');
             let target1Img = images(svgPath + '3.png');
             let offsetX1 = 100;
@@ -85,9 +87,9 @@ async.series({
             callback(null, target1Img, offsetX1, offsetY1);
         })
     },
-    svg4: function (callback) {
+    svg4: callback => {
         fs.writeFileSync(svgPath + '4.svg', svg4);
-        gm(svgPath + '4.svg').write(svgPath + '4.png', function (err) {
+        gm(svgPath + '4.svg').write(svgPath + '4.png', err => {
             if (!err) console.log('4.svg生成成功！');
             let target1Img = images(svgPath + '4.png');
             let offsetX1 = 450;
@@ -96,19 +98,17 @@ async.series({
             callback(null, target1Img, offsetX1, offsetY1);
         })
     }
-}, function (err, results) {
+}, (err, results) => {
     images(sourceImg)
-        // 图像路径
-        .draw(images("./svgfile/headoJk_JwD8aMN1ZvlqNGyRm0xcOjM8.jpg"), 310, 100)
+    // 图像路径
+        .draw(images(mainPath+"headoJk_JwD8aMN1ZvlqNGyRm0xcOjM8.jpg"), 310, 100)
         .draw(results.svg1[0], results.svg1[1], results.svg1[2])
         .draw(results.svg2[0], results.svg2[1], results.svg2[2])
         .draw(results.svg3[0], results.svg3[1], results.svg3[2])
         .draw(results.svg4[0], results.svg4[1], results.svg4[2])
         .save(svgPath + 'card.png', {quality: 100});
     //删除多余文件
-    filePath.forEach(function (pa) {
-        fs.unlinkSync(pa);
-    })
+    filePath.forEach(pa => fs.unlinkSync(pa));
     console.log('ok', svgName);
 });
 
